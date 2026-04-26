@@ -1,24 +1,41 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { createContext, useEffect, useState } from 'react';
+import { db } from '@/db/client';
+import { habitsTable } from '@/db/schema';
+import { seedHabitsIfEmpty } from '@/db/seed';
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
+// Adapted from IS4447 student _layout.tsx example - modified for habits with SQLite
 
-export const unstable_settings = {
-  anchor: '(tabs)',
+export type Habit = {
+  id: number;
+  name: string;
+  type: string;
+  goal: number;
+  unit: string | null;
 };
 
+type HabitContextType = {
+  habits: Habit[];
+  setHabits: React.Dispatch<React.SetStateAction<Habit[]>>;
+};
+
+export const HabitContext = createContext<HabitContextType | null>(null);
+
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const [habits, setHabits] = useState<Habit[]>([]);
+
+  useEffect(() => {
+    async function loadHabits() {
+      await seedHabitsIfEmpty();
+      const rows = await db.select().from(habitsTable);
+      setHabits(rows);
+    }
+    loadHabits();
+  }, []);
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <HabitContext.Provider value={{ habits, setHabits }}>
+      <Stack />
+    </HabitContext.Provider>
   );
 }
