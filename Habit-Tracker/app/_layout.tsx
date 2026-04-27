@@ -2,7 +2,7 @@ import { Stack } from 'expo-router';
 import { createContext, useEffect, useState } from 'react';
 import { db } from '@/db/client';
 import { habitsTable } from '@/db/schema';
-import { seedHabitsIfEmpty } from '@/db/seed';
+import { seedIfEmpty } from '@/db/seed';
 
 // Adapted from IS4447 student _layout.tsx example - modified for habits with SQLite
 
@@ -12,6 +12,7 @@ export type Habit = {
   type: string;
   goal: number;
   unit: string | null;
+  categoryID: number;
 };
 
 type HabitContextType = {
@@ -26,7 +27,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     async function loadHabits() {
-      await seedHabitsIfEmpty();
+      await seedIfEmpty();
       const rows = await db.select().from(habitsTable);
       setHabits(rows);
     }
@@ -35,7 +36,7 @@ export default function RootLayout() {
 
   return (
     <HabitContext.Provider value={{ habits, setHabits }}>
-      <Stack />
+      <Stack screenOptions={{ headerShown: false }} />
     </HabitContext.Provider>
   );
 }
