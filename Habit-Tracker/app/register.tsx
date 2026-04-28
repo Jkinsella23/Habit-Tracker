@@ -36,7 +36,7 @@ export default function RegisterScreen() {
 
     await db.insert(userTable).values({
       name,
-      email,
+      email: email.toLowerCase(),
       password,
     });
 

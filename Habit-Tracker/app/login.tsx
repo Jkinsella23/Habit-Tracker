@@ -23,7 +23,7 @@ export default function LoginScreen() {
       return;
     }
 
-    const users = await db.select().from(userTable).where(eq(userTable.email, email));
+    const users = await db.select().from(userTable).where(eq(userTable.email, email.toLowerCase()));
 
     if (users.length === 0) {
       setError('No account found with that email');
