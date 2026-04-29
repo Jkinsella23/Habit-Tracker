@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Text, View, ScrollView, Button} from 'react-native';
+import { Text, ScrollView, Button, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HabitContext, Habit } from '../_layout';
 import { useRouter } from 'expo-router';
@@ -22,11 +22,12 @@ export default function HomeScreen() {
           <Text>No habits added yet.</Text>
         ) : (
           habits.map((habit: Habit) => (
-            <View key={habit.id} style={{ marginBottom: 12, padding: 10, borderWidth: 1 }}>
+            <TouchableOpacity
+              key={habit.id}
+              onPress={() => router.push({ pathname: '/habit/[id]' as any, params: { id: habit.id.toString() } })}              style={{ marginBottom: 12, padding: 10, borderWidth: 1 }}>
               <Text style={{ fontSize: 18 }}>{habit.name}</Text>
-              <Text>Type: {habit.type}</Text>
               <Text>Goal: {habit.goal} {habit.unit}</Text>
-            </View>
+            </TouchableOpacity>
           ))
         )}
       </ScrollView>
