@@ -1,10 +1,14 @@
+// Adapted from IS4447 lecture and tutorial examples
 import { useRouter } from 'expo-router';
 import { useContext, useState } from 'react';
-import { Button, Text, TextInput, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { db } from '@/db/client';
 import { userTable } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { HabitContext } from './_layout';
+import FormField from '@/components/ui/form-field';
+import PrimaryButton from '@/components/ui/primary-button';
+import ScreenHeader from '@/components/ui/screen-header';
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -40,27 +44,38 @@ export default function LoginScreen() {
   };
 
   return (
-    <View style={{ flex: 1, padding: 20, justifyContent: 'center' }}>
-      <Text style={{ fontSize: 28, marginBottom: 20 }}>Habit Tracker</Text>
+    <View style={styles.container}>
+      <View style={styles.form}>
+        <ScreenHeader title="Habit Tracker" />
 
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        style={{ borderWidth: 1, marginVertical: 5, padding: 10 }}
-      />
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        style={{ borderWidth: 1, marginVertical: 5, padding: 10 }}
-      />
+        <FormField label="Email" value={email} onChangeText={setEmail} />
+        <FormField label="Password" value={password} onChangeText={setPassword} />
 
-      {error ? <Text style={{ color: 'red', marginVertical: 5 }}>{error}</Text> : null}
+        {error ? <Text style={styles.error}>{error}</Text> : null}
 
-      <Button title="Login" onPress={handleLogin} />
-      <Button title="Create Account" onPress={() => router.push('/register')} />
+        <PrimaryButton label="Login" onPress={handleLogin} />
+        <View style={{ marginTop: 10 }}>
+          <PrimaryButton label="Create Account" variant="secondary" onPress={() => router.push('/register')} />
+        </View>
+      </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  form: {
+    width: '100%',
+    maxWidth: 350,
+    paddingHorizontal: 20,
+    gap: 12,
+  },
+  error: {
+    color: 'red',
+    marginVertical: 5,
+  },
+});

@@ -1,14 +1,16 @@
+// Adapted from IS4447 lecture and tutorial examples
+// TouchableOpacity used for selectable buttons - allows custom styling to highlight selected option
+// Reference: https://reactnative.dev/docs/touchableopacity
 import { useRouter } from 'expo-router';
 import { useContext, useState } from 'react';
-import { Button, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { db } from '@/db/client';
 import { habitsTable } from '@/db/schema';
 import { HabitContext } from '../_layout';
-
-// Adapted from IS4447 lecture and tutorial examples
-// TouchableOpacity used for selectable buttons - allows custom styling to highlight selected option
-// which is not possible with React Native's Button component
-// Reference: https://reactnative.dev/docs/touchableopacity
+import { SafeAreaView } from 'react-native-safe-area-context';
+import FormField from '@/components/ui/form-field';
+import PrimaryButton from '@/components/ui/primary-button';
+import ScreenHeader from '@/components/ui/screen-header';
 
 export default function AddHabit() {
   const router = useRouter();
@@ -31,7 +33,6 @@ export default function AddHabit() {
 
   const saveHabit = async () => {
     if (!name.trim() || !goal.trim() || !unit) return;
-
     await db.insert(habitsTable).values({
       name,
       type: 'number',
@@ -39,47 +40,86 @@ export default function AddHabit() {
       unit,
       categoryID,
     });
-
     const rows = await db.select().from(habitsTable);
     setHabits(rows);
     router.back();
   };
 
   return (
-    <View style={{ padding: 20 }}>
-      <Text style={{ fontSize: 22, marginBottom: 10 }}>Add Habit</Text>
+    <SafeAreaView style={styles.safeArea}>
+      <ScreenHeader title="Add Habit" subtitle="Create a new habit" />
 
-      <TextInput placeholder="Name" value={name} onChangeText={setName}
-        style={{ borderWidth: 1, marginVertical: 5, padding: 10 }} />
+      <FormField label="Name" value={name} onChangeText={setName} />
+      <FormField label="Goal" value={goal} onChangeText={setGoal} />
 
-      <TextInput placeholder="Goal" value={goal} onChangeText={setGoal} keyboardType="numeric"
-        style={{ borderWidth: 1, marginVertical: 5, padding: 10 }} />
-
-      <Text style={{ marginTop: 10, marginBottom: 5 }}>Unit:</Text>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginBottom: 10 }}>
+      <Text style={styles.sectionLabel}>Unit:</Text>
+      <View style={styles.filterRow}>
         {units.map((u) => (
-          <TouchableOpacity
+          <Pressable
             key={u}
             onPress={() => setUnit(u)}
-            style={{ padding: 10, marginRight: 5, marginBottom: 5, borderWidth: 1, backgroundColor: unit === u ? '#2196F3' : 'white' }}>
-            <Text style={{ color: unit === u ? 'white' : 'black' }}>{u}</Text>
-          </TouchableOpacity>
+            style={[styles.filterButton, unit === u && styles.filterButtonSelected]}>
+            <Text style={[styles.filterButtonText, unit === u && styles.filterButtonTextSelected]}>{u}</Text>
+          </Pressable>
         ))}
       </View>
 
-      <Text style={{ marginTop: 10, marginBottom: 5 }}>Category:</Text>
-      <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+      <Text style={styles.sectionLabel}>Category:</Text>
+      <View style={styles.filterRow}>
         {categories.map((cat) => (
-          <TouchableOpacity
+          <Pressable
             key={cat.id}
             onPress={() => setCategoryID(cat.id)}
-            style={{ padding: 10, marginRight: 5, borderWidth: 1, backgroundColor: categoryID === cat.id ? '#2196F3' : 'white' }}>
-            <Text style={{ color: categoryID === cat.id ? 'white' : 'black' }}>{cat.name}</Text>
-          </TouchableOpacity>
+            style={[styles.filterButton, categoryID === cat.id && styles.filterButtonSelected]}>
+            <Text style={[styles.filterButtonText, categoryID === cat.id && styles.filterButtonTextSelected]}>{cat.name}</Text>
+          </Pressable>
         ))}
       </View>
 
-      <Button title="Save" onPress={saveHabit} disabled={!name.trim()} />
-    </View>
+      <PrimaryButton label="Save Habit" onPress={saveHabit} />
+      <View style={{ marginTop: 10 }}>
+        <PrimaryButton label="Cancel" variant="secondary" onPress={() => router.back()} />
+      </View>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#F8FAFC',
+  },
+  sectionLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#334155',
+    marginBottom: 6,
+  },
+  filterRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginBottom: 16,
+  },
+  filterButton: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#94A3B8',
+    borderRadius: 999,
+    borderWidth: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  filterButtonSelected: {
+    backgroundColor: '#0F172A',
+    borderColor: '#0F172A',
+  },
+  filterButtonText: {
+    color: '#0F172A',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  filterButtonTextSelected: {
+    color: '#FFFFFF',
+  },
+});
