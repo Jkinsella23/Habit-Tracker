@@ -46,10 +46,9 @@ export default function LoginScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.form}>
-        <ScreenHeader title="Habit Tracker" />
-
+        <ScreenHeader title="Habit Tracker" showLogo={true}/>
         <FormField label="Email" value={email} onChangeText={setEmail} />
-        <FormField label="Password" value={password} onChangeText={setPassword} />
+        <FormField label="Password" value={password} onChangeText={setPassword} secureTextEntry={true} />
 
         {error ? <Text style={styles.error}>{error}</Text> : null}
 

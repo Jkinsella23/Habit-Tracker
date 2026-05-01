@@ -49,10 +49,17 @@ export default function StatsScreen() {
     const habitLogs = filteredLogs.filter((l) => l.habitID === habit.id);
     const total = habitLogs.reduce((sum, l) => sum + l.value, 0);
 
+    let multiplier = 1;
+    if (period === 'week') multiplier = 7;
+    if (period === 'month') multiplier = 30;
+
+    const target = habit.goal * multiplier;
+    const percentage = target > 0 ? Math.round((total / target) * 100) : 0;
+
     return {
-      value: total,
+      value: Math.min(percentage, 100),
       label: habit.name.slice(0, 6),
-      frontColor: '#0F766E',
+      frontColor: percentage >= 100 ? '#0F766E' : '#94A3B8',
     };
   });
 
@@ -110,7 +117,8 @@ export default function StatsScreen() {
               data={chartData}
               barWidth={30}
               spacing={20}
-              noOfSections={5}
+              noOfSections={4}
+              maxValue={100}
               barBorderRadius={6}
               yAxisThickness={0}
               xAxisThickness={0}

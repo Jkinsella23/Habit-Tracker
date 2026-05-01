@@ -1,14 +1,22 @@
 // code adapted from IS4447 tutorial for habit tracker app
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
 type Props = {
   title: string;
   subtitle?: string;
+  showLogo?: boolean;
 };
 
-export default function ScreenHeader({ title, subtitle }: Props) {
+export default function ScreenHeader({ title, subtitle, showLogo = false }: Props) {
   return (
     <View style={styles.container}>
+      {showLogo && (
+        <Image
+          source={require('@/assets/logo.png')}          
+          style={styles.logo}
+          resizeMode="contain"
+        />
+      )}
       <Text style={styles.title}>{title}</Text>
       {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
     </View>
@@ -18,6 +26,12 @@ export default function ScreenHeader({ title, subtitle }: Props) {
 const styles = StyleSheet.create({
   container: {
     marginBottom: 16,
+  },
+  logo: {
+    width: 150,
+    height: 150,
+    alignSelf: 'center',
+    marginBottom: 12,
   },
   title: {
     color: '#111827',
