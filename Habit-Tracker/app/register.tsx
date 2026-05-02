@@ -47,9 +47,8 @@ export default function RegisterScreen() {
 
         <FormField label="Name" value={name} onChangeText={setName} />
         <FormField label="Email" value={email} onChangeText={setEmail} />
-        <FormField label="Password" value={password} onChangeText={setPassword} />
-        <FormField label="Confirm Password" value={confirmPassword} onChangeText={setConfirmPassword} />
-
+        <FormField label="Password" value={password} onChangeText={setPassword} secureTextEntry={true} />        
+        <FormField label="Confirm Password" value={confirmPassword} onChangeText={setConfirmPassword} secureTextEntry={true} />
         {error ? <Text style={styles.error}>{error}</Text> : null}
 
         <PrimaryButton label="Register" onPress={handleRegister} />
