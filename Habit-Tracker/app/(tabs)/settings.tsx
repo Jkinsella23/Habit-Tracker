@@ -54,6 +54,9 @@ export default function SettingsScreen() {
         <Text style={styles.value}>{user?.email}</Text>
       </View>
 
+      <PrimaryButton label="Manage Categories" variant="secondary" onPress={() => router.push('/categories')} />
+      <View style={styles.buttonSpacing} />
+
       <PrimaryButton label="Logout" onPress={handleLogout} />
 
       <View style={styles.buttonSpacing}>

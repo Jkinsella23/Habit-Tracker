@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router';
 import { useContext, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { db } from '@/db/client';
-import { habitsTable } from '@/db/schema';
+import { habitsTable, targetTable } from '@/db/schema';
 import { HabitContext } from '../_layout';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FormField from '@/components/ui/form-field';
@@ -17,6 +17,7 @@ export default function AddHabit() {
   const context = useContext(HabitContext);
   if (!context) return null;
   const { setHabits } = context;
+  const [target, setTarget] = useState('');
 
   const [name, setName] = useState('');
   const [goal, setGoal] = useState('');
@@ -33,13 +34,25 @@ export default function AddHabit() {
 
   const saveHabit = async () => {
     if (!name.trim() || !goal.trim() || !unit) return;
-    await db.insert(habitsTable).values({
+
+    // .returning() used to get the inserted habit's ID for linking to targets table
+    // Reference: https://orm.drizzle.team/docs/insert#insert-returning
+    const inserted = await db.insert(habitsTable).values({
       name,
       type: 'number',
       goal: Number(goal),
       unit,
       categoryID,
-    });
+    }).returning();
+
+    if (target.trim()) {
+      await db.insert(targetTable).values({
+        habitID: inserted[0].id,
+        type: 'weekly',
+        goal: Number(target),
+      });
+    }
+
     const rows = await db.select().from(habitsTable);
     setHabits(rows);
     router.back();
@@ -75,7 +88,7 @@ export default function AddHabit() {
           </Pressable>
         ))}
       </View>
-
+      <FormField label="Weekly Target" value={target} onChangeText={setTarget} />
       <PrimaryButton label="Save Habit" onPress={saveHabit} />
       <View style={{ marginTop: 10 }}>
         <PrimaryButton label="Cancel" variant="secondary" onPress={() => router.back()} />
