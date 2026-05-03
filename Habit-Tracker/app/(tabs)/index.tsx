@@ -1,6 +1,7 @@
 // Adapted from IS4447 lecture and tutorial examples
 // Streak tracking - calculates consecutive days where habit goals are met
-import { useContext, useState } from 'react';
+// API fetch pattern reference: https://medium.com/@emre.deniz/react-native-making-api-calls-1d5ce5172245
+import { useContext, useState, useEffect } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HabitContext, Habit, HabitLog } from '../_layout';
@@ -8,7 +9,9 @@ import { useRouter } from 'expo-router';
 import PrimaryButton from '@/components/ui/primary-button';
 import ScreenHeader from '@/components/ui/screen-header';
 import InfoTag from '@/components/ui/info-tag';
-// https://claude.ai/share/103da780-302c-4b73-b2e9-f57cbd233666 AI used to create the streak, adapted code to include the timer warning to complete a habit before the streak is lost, Used the same chat to update the habit log table seed file to show the feature on initial load of application.
+
+// https://claude.ai/share/103da780-302c-4b73-b2e9-f57cbd233666 AI used to create the streak, adapted code to include the timer warning to complete a habit before the streak is lost
+
 const getLocalDateStr = (date: Date = new Date()): string => {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -20,7 +23,7 @@ const calculateStreak = (habit: Habit, logs: HabitLog[]): number => {
   const metDates = logs
     .filter((log) => log.habitID === habit.id && log.value >= habit.goal)
     .map((log) => log.date)
-    .filter((date, index, self) => self.indexOf(date) === index) // deduplicate
+    .filter((date, index, self) => self.indexOf(date) === index)
     .sort()
     .reverse();
 
@@ -53,16 +56,37 @@ const calculateStreak = (habit: Habit, logs: HabitLog[]): number => {
 
 export default function HomeScreen() {
   const context = useContext(HabitContext);
-  if (!context) return null;
-  const { habits, user, logs } = context;
   const router = useRouter();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [quote, setQuote] = useState('');
+  const [quoteAuthor, setQuoteAuthor] = useState('');
+  const [quoteLoading, setQuoteLoading] = useState(true);
+
+  // API integration using API Ninjas quotes endpoint
+  // Reference: https://api-ninjas.com/api/quotes
+  useEffect(() => {
+    fetch('https://api.api-ninjas.com/v1/quotes', {
+      headers: { 'X-Api-Key': process.env.EXPO_PUBLIC_API_NINJAS_KEY ?? '' }
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.length > 0) {
+          setQuote(data[0].quote);
+          setQuoteAuthor(data[0].author);
+        }
+      })
+      .catch(() => setQuote('Believe in yourself and keep going!'))
+      .finally(() => setQuoteLoading(false));
+  }, []);
+
+  if (!context) return null;
+  const { habits, user, logs } = context;
 
   const categories = ['All', 'Health', 'Fitness', 'Personal'];
-
   const todayStr = getLocalDateStr();
+
   const filteredHabits = habits.filter((habit: Habit) => {
     const matchesSearch =
       searchQuery.trim().length === 0 ||
@@ -81,6 +105,17 @@ export default function HomeScreen() {
         title={`Hi ${user?.name || 'there'}!`}
         subtitle={`${habits.length} habits tracked`}
       />
+
+      <View style={styles.quoteCard}>
+        {quoteLoading ? (
+          <Text style={styles.quoteText}>Loading inspiration...</Text>
+        ) : (
+          <>
+            <Text style={styles.quoteText}>"{quote}"</Text>
+            {quoteAuthor ? <Text style={styles.quoteAuthor}>— {quoteAuthor}</Text> : null}
+          </>
+        )}
+      </View>
 
       <View style={styles.buttonRow}>
         <View style={{ flex: 1, marginRight: 5 }}>
@@ -225,5 +260,24 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingTop: 8,
     textAlign: 'center',
+  },
+  quoteCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    padding: 14,
+    marginBottom: 14,
+    borderLeftWidth: 4,
+    borderLeftColor: '#0F766E',
+  },
+  quoteText: {
+    color: '#374151',
+    fontSize: 14,
+    fontStyle: 'italic',
+  },
+  quoteAuthor: {
+    color: '#6B7280',
+    fontSize: 12,
+    marginTop: 6,
+    textAlign: 'right',
   },
 });
