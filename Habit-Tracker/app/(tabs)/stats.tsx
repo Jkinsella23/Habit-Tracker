@@ -6,6 +6,7 @@ import { BarChart } from 'react-native-gifted-charts';
 import { HabitContext, Habit } from '../_layout';
 import ScreenHeader from '@/components/ui/screen-header';
 import InfoTag from '@/components/ui/info-tag';
+import FormField from '@/components/ui/form-field';
 
 export default function StatsScreen() {
   const context = useContext(HabitContext);
@@ -14,10 +15,16 @@ export default function StatsScreen() {
 
   const [period, setPeriod] = useState('week');
   const periods = ['day', 'week', 'month'];
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   const today = new Date();
 
   const getDateRange = () => {
+    if (startDate.trim() && endDate.trim()) {
+      return { start: startDate.trim(), end: endDate.trim() };
+    }
+
     const end = today.toISOString().slice(0, 10);
 
     if (period === 'day') {
@@ -95,19 +102,36 @@ export default function StatsScreen() {
           {periods.map((p) => (
             <Pressable
               key={p}
-              onPress={() => setPeriod(p)}
-              style={[styles.filterButton, period === p && styles.filterButtonSelected]}>
-              <Text style={[styles.filterButtonText, period === p && styles.filterButtonTextSelected]}>
+              onPress={() => { setPeriod(p); setStartDate(''); setEndDate(''); }}
+              style={[styles.filterButton, period === p && !startDate && styles.filterButtonSelected]}>
+              <Text style={[styles.filterButtonText, period === p && !startDate && styles.filterButtonTextSelected]}>
                 {p.charAt(0).toUpperCase() + p.slice(1)}
               </Text>
             </Pressable>
           ))}
         </View>
 
+        <Text style={styles.sectionLabel}>Or filter by date range:</Text>
+        <View style={{ flexDirection: 'row', gap: 10 }}>
+          <View style={{ flex: 1 }}>
+            <FormField label="From" value={startDate} onChangeText={setStartDate} placeholder="YYYY-MM-DD" />
+          </View>
+          <View style={{ flex: 1 }}>
+            <FormField label="To" value={endDate} onChangeText={setEndDate} placeholder="YYYY-MM-DD" />
+          </View>
+        </View>
+
         <View style={styles.summaryRow}>
           <InfoTag label="Logs" value={totalLogs.toString()} />
           <InfoTag label="Habits" value={habitsLogged.toString()} />
         </View>
+
+        {totalLogs === 0 && (
+          <View style={{ alignItems: 'center', paddingVertical: 20 }}>
+            <Text style={styles.emptyText}>No activity logged yet.</Text>
+            <Text style={{ color: '#6B7280', marginTop: 4 }}>Log a habit from the Home screen to see your stats here.</Text>
+          </View>
+        )}
 
         <View style={styles.chartCard}>
           <Text style={styles.chartTitle}>Activity by Habit</Text>
@@ -247,4 +271,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingVertical: 20,
   },
+
+  sectionLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#334155',
+    marginBottom: 6,
+    marginTop: 10,
+},
 });

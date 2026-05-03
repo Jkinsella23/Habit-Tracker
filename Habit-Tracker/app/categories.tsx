@@ -17,6 +17,7 @@ export default function CategoriesScreen() {
   const [name, setName] = useState('');
   const [colour, setColour] = useState('#4CAF50');
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [error, setError] = useState('');
 
   const colours = ['#4CAF50', '#2196F3', '#9C27B0', '#FF9800', '#F44336', '#009688'];
 
@@ -30,8 +31,8 @@ export default function CategoriesScreen() {
   });
 
   const saveCategory = async () => {
-    if (!name.trim()) return;
-
+    setError('');
+    if (!name.trim()) { setError('Please enter a category name'); return; }
     if (editingId) {
       await db.update(categoriesTable)
         .set({ name, colour })
@@ -90,6 +91,7 @@ export default function CategoriesScreen() {
             />
           ))}
         </View>
+        {error ? <Text style={{ color: 'red', marginBottom: 10 }}>{error}</Text> : null}
 
         <PrimaryButton
           label={editingId ? 'Save Changes' : 'Add Category'}

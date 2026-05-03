@@ -22,9 +22,13 @@ export default function LogHabit() {
 
   const today = new Date().toISOString().split('T')[0];
   const selectedHabit = habits.find((h: Habit) => h.id === selectedHabitID);
-
+  const [error, setError] = useState('');
+  
   const saveLog = async () => {
-    if (!selectedHabitID || !value.trim()) return;
+    setError('');
+    if (!selectedHabitID) { setError('Please select a habit'); return; }
+    if (!value.trim()) { setError('Please enter a value'); return; }
+
     await db.insert(habitLogsTable).values({
       habitID: selectedHabitID,
       date: today,
@@ -63,6 +67,8 @@ export default function LogHabit() {
 
         <FormField label="Value" value={value} onChangeText={setValue} />
         <FormField label="Notes (optional)" value={notes} onChangeText={setNotes} />
+        {error ? <Text style={{ color: 'red', marginBottom: 10 }}>{error}</Text> : null}
+        <PrimaryButton label="Save Log" onPress={saveLog} />
 
         <PrimaryButton label="Save Log" onPress={saveLog} />
         <View style={{ marginTop: 10 }}>

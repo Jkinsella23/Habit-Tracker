@@ -31,9 +31,14 @@ export default function AddHabit() {
   ];
 
   const units = ['steps', 'hours', 'ml', 'minutes'];
+  const [error, setError] = useState('');
+
 
   const saveHabit = async () => {
-    if (!name.trim() || !goal.trim() || !unit) return;
+    setError('');
+    if (!name.trim()) { setError('Please enter a habit name'); return; }
+    if (!goal.trim()) { setError('Please enter a goal'); return; }
+    if (!unit) { setError('Please select a unit'); return; }
 
     // .returning() used to get the inserted habit's ID for linking to targets table
     // Reference: https://orm.drizzle.team/docs/insert#insert-returning
@@ -88,6 +93,7 @@ export default function AddHabit() {
           </Pressable>
         ))}
       </View>
+      {error ? <Text style={{ color: 'red', marginBottom: 10 }}>{error}</Text> : null}
       <FormField label="Weekly Target" value={target} onChangeText={setTarget} />
       <PrimaryButton label="Save Habit" onPress={saveHabit} />
       <View style={{ marginTop: 10 }}>
