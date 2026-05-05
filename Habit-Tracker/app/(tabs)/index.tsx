@@ -65,7 +65,7 @@ export default function HomeScreen() {
   const [quoteLoading, setQuoteLoading] = useState(true);
 
   // API integration using API Ninjas quotes endpoint
-  // Reference: https://api-ninjas.com/api/quotes
+  // Reference: https://api-ninjas.com/api/quotes, https://medium.com/@emre.deniz/react-native-making-api-calls-1d5ce5172245
   useEffect(() => {
     fetch('https://api.api-ninjas.com/v1/quotes', {
       headers: { 'X-Api-Key': process.env.EXPO_PUBLIC_API_NINJAS_KEY ?? '' }
