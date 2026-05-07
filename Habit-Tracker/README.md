@@ -1,50 +1,78 @@
-# Welcome to your Expo app 👋
+Habit Tracker - IS4447
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+QR Codes
 
-## Get started
+### Android
+![Android QR Code](./assets/AndroidQR.png)
 
-1. Install dependencies
+### iOS
+![iOS QR Code](./assets/iOSQR.png)
 
-   ```bash
-   npm install
-   ```
+Student
+- Name: Jason Kinsella
+- Student Number: 122318931
+- Module: IS4447
+- Habit Tracker Option A
 
-2. Start the app
+Overview
+A mobile habit tracking app built with React Native (Expo) and SQLite  Drizzle ORM. Users can create habits, log daily activity, set weekly targets, and view progress through charts and streak tracking.
 
-   ```bash
-   npx expo start
-   ```
+Features
+- Register, login, logout, delete profile
+- Create, edit, delete habits with categories
+- Log daily habit activity with optional notes
+- View stats with bar chart and goal progress
+- Filter by category, search by text, filter by date range
+- Streak tracking with fire and hourglass indicators
+- Quotes from API Ninjas
+- Manage categories with custom colours
+- Weekly target setting
+- Field validation with error messages
+- Empty states with guidance
 
-In the output, you'll find options to open the app in a
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+Setup
+1. cd Habit-Tracker
+2. npm install
+3. Create a .env file with:
+   EXPO_PUBLIC_API_NINJAS_KEY=your_key_here
+4. npx expo start
 
-## Get a fresh project
+Testing
+npm test
 
-When you're ready, run:
+Three tests included:
+- Unit test: Seed function inserts data correctly without duplication
+- Component test: FormField renders label and fires onChangeText
+- Integration test: Habit list displays seeded data after database 
 
-```bash
-npm run reset-project
-```
+Tables
+- categories 
+- habits 
+- habit_logs 
+- targets 
+- users 
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Folder Structure
+app/
+  (tabs)/ - Home, Stats, Settings screens
+  habit/ - Add, log, edit/delete habit screens
+  login.tsx - Login screen
+  register.tsx - Register screen
+  categories.tsx - Category management
+  _layout.tsx - Root layout with context
+components/
+  ui/ - FormField, PrimaryButton, ScreenHeader, InfoTag
+db/
+  schema.ts - Drizzle table definitions
+  client.ts - Database connection
+  seed.ts - Sample data
+tests/
+  unit.test.ts
+  component.test.tsx
+  integration.test.tsx
 
-## Learn more
 
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+GitHub
+https://github.com/Jkinsella23/Habit-Tracker

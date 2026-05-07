@@ -1,15 +1,15 @@
 // Adapted from IS4447 lecture and tutorial examples
 // Pressable used for selectable habit buttons - same pattern as add.tsx
-import { useRouter } from 'expo-router';
-import { useContext, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { db } from '@/db/client';
-import { habitLogsTable } from '@/db/schema';
-import { HabitContext, Habit } from '../_layout';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import FormField from '@/components/ui/form-field';
 import PrimaryButton from '@/components/ui/primary-button';
 import ScreenHeader from '@/components/ui/screen-header';
+import { db } from '@/db/client';
+import { habitLogsTable } from '@/db/schema';
+import { useRouter } from 'expo-router';
+import { useContext, useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Habit, HabitContext } from '../_layout';
 
 export default function LogHabit() {
   const router = useRouter();
@@ -70,7 +70,6 @@ export default function LogHabit() {
         {error ? <Text style={{ color: 'red', marginBottom: 10 }}>{error}</Text> : null}
         <PrimaryButton label="Save Log" onPress={saveLog} />
 
-        <PrimaryButton label="Save Log" onPress={saveLog} />
         <View style={{ marginTop: 10 }}>
           <PrimaryButton label="Cancel" variant="secondary" onPress={() => router.back()} />
         </View>

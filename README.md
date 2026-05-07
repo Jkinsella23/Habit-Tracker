@@ -1,9 +1,18 @@
 Habit Tracker - IS4447
 
+QR Codes
+
+### Android
+![Android QR Code](./assets/AndroidQR.png)
+
+### iOS
+![iOS QR Code](./assets/iOSQR.png)
+
 Student
 - Name: Jason Kinsella
 - Student Number: 122318931
 - Module: IS4447
+- Habit Tracker Option A
 
 Overview
 A mobile habit tracking app built with React Native (Expo) and SQLite  Drizzle ORM. Users can create habits, log daily activity, set weekly targets, and view progress through charts and streak tracking.
