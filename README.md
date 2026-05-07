@@ -6,7 +6,7 @@ https://github.com/Jkinsella23/Habit-Tracker
 QR Codes
 
 ### Android
-![Android QR Code](./assets/AndroidQR.png)
+![Android QR Code](Habit-Tracker/assets/AndroidQR.png)
 
 ### iOS
 ![iOS QR Code](./assets/iOSQR.png)
