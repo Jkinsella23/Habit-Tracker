@@ -3,10 +3,10 @@ Habit Tracker - IS4447
 QR Codes
 
 ### Android
-![Android QR Code](./assets/AndroidQR.png)
+![Android QR Code](Habit-Tracker/assets/AndroidQR.png)
 
 ### iOS
-![iOS QR Code](./assets/iOSQR.png)
+![iOS QR Code](Habit-Tracker/assets/iOSQR.png)
 
 Student
 - Name: Jason Kinsella
