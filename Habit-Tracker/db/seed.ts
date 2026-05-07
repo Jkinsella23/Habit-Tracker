@@ -1,10 +1,24 @@
 import { db } from './client';
-import { categoriesTable, habitsTable, habitLogsTable, targetTable } from './schema';
+import { categoriesTable, habitLogsTable, habitsTable, targetTable } from './schema';
+
+// https://claude.ai/share/a1121a5f-8490-414e-986e-410e877bb233 - adapted to get the seed data updated
 
 export async function seedIfEmpty() {
   const existing = await db.select().from(categoriesTable);
   if (existing.length > 0) return;
 
+  const daysAgo = (n: number) => {
+    const d = new Date();
+    d.setDate(d.getDate() - n);
+
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  };
+
+ 
   // Seed categories
   await db.insert(categoriesTable).values([
     { name: 'Health', colour: '#4CAF50', icon: 'heart' },
@@ -24,36 +38,36 @@ export async function seedIfEmpty() {
 await db.insert(habitLogsTable).values([
   // --- Habit 1: Water (goal: 8 glasses) ---
   // Active 5-day streak (May 3 back to Apr 29) → shows 🔥 5 day streak
-  { habitID: 1, date: '2026-04-29', value: 9, notes: 'Great hydration day' },
-  { habitID: 1, date: '2026-04-30', value: 8, notes: null },
-  { habitID: 1, date: '2026-05-01', value: 10, notes: 'Exceeded goal!' },
-  { habitID: 1, date: '2026-05-02', value: 8, notes: null },
-  { habitID: 1, date: '2026-05-03', value: 8, notes: 'Hit my goal!' },
+  { habitID: 1, date: daysAgo(4), value: 9, notes: 'Great hydration day' },
+  { habitID: 1, date: daysAgo(3), value: 8, notes: null },
+  { habitID: 1, date: daysAgo(2), value: 10, notes: 'Exceeded goal!' },
+  { habitID: 1, date: daysAgo(1), value: 8, notes: null },
+  { habitID: 1, date: daysAgo(0), value: 8, notes: 'Hit my goal!' },
 
   // --- Habit 2: Sleep (goal: 8 hours) ---
   // Last goal met was yesterday (May 2), streak of 3 → shows ⏳ about to lose
-  { habitID: 2, date: '2026-04-30', value: 8, notes: null },
-  { habitID: 2, date: '2026-05-01', value: 9, notes: 'Slept great' },
-  { habitID: 2, date: '2026-05-02', value: 8, notes: null },
+  { habitID: 2, date: daysAgo(3), value: 8, notes: null },
+  { habitID: 2, date: daysAgo(2), value: 9, notes: 'Slept great' },
+  { habitID: 2, date: daysAgo(1), value: 8, notes: null },
   // No log for May 3 → timer warning
 
   // --- Habit 3: Steps (goal: 10000 steps) ---
   // Active 3-day streak → shows 🔥 3 day streak
-  { habitID: 3, date: '2026-04-28', value: 8500, notes: 'Missed goal' },
-  { habitID: 3, date: '2026-05-01', value: 11000, notes: null },
-  { habitID: 3, date: '2026-05-02', value: 10500, notes: 'Nice walk' },
-  { habitID: 3, date: '2026-05-03', value: 12000, notes: 'Went for a long walk' },
+  { habitID: 3, date: daysAgo(5), value: 8500, notes: 'Missed goal' },
+  { habitID: 3, date: daysAgo(2), value: 11000, notes: null },
+  { habitID: 3, date: daysAgo(1), value: 10500, notes: 'Nice walk' },
+  { habitID: 3, date: daysAgo(0), value: 12000, notes: 'Went for a long walk' },
 
   // --- Habit 4: Gym (goal: 1 checkbox) ---
   // Last met yesterday, streak of 2 → shows ⏳ about to lose
-  { habitID: 4, date: '2026-05-01', value: 1, notes: null },
-  { habitID: 4, date: '2026-05-02', value: 1, notes: 'Leg day' },
+  { habitID: 4, date: daysAgo(2), value: 1, notes: null },
+  { habitID: 4, date: daysAgo(1), value: 1, notes: 'Leg day' },
   // No log for May 3 → timer warning
 
   // --- Habit 5: Reading (goal: 1 checkbox) ---
   // Streak broken — last met Apr 30, missed May 1 → no badge at all
-  { habitID: 5, date: '2026-04-29', value: 1, notes: 'Read 30 pages' },
-  { habitID: 5, date: '2026-04-30', value: 1, notes: null },
+  { habitID: 5, date: daysAgo(4), value: 1, notes: 'Read 30 pages' },
+  { habitID: 5, date: daysAgo(3), value: 1, notes: null },
   // Gap on May 1 breaks it, no active streak
 ]);
 
