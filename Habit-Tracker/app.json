@@ -44,6 +44,19 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "2eec4f2b-49de-490a-a481-110b97ed3108"
+      }
+    },
+    "owner": "jkinsella15",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/2eec4f2b-49de-490a-a481-110b97ed3108"
     }
   }
 }

@@ -1,14 +1,14 @@
 // Adapted from IS4447 lecture and tutorial examples
 // Streak tracking - calculates consecutive days where habit goals are met
 // API fetch pattern reference: https://medium.com/@emre.deniz/react-native-making-api-calls-1d5ce5172245
-import { useContext, useState, useEffect } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { HabitContext, Habit, HabitLog } from '../_layout';
-import { useRouter } from 'expo-router';
+import InfoTag from '@/components/ui/info-tag';
 import PrimaryButton from '@/components/ui/primary-button';
 import ScreenHeader from '@/components/ui/screen-header';
-import InfoTag from '@/components/ui/info-tag';
+import { useRouter } from 'expo-router';
+import { useContext, useEffect, useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Habit, HabitContext, HabitLog } from '../_layout';
 
 // https://claude.ai/share/103da780-302c-4b73-b2e9-f57cbd233666 AI used to create the streak, adapted code to include the timer warning to complete a habit before the streak is lost
 
@@ -67,7 +67,7 @@ export default function HomeScreen() {
   // API integration using API Ninjas quotes endpoint
   // Reference: https://api-ninjas.com/api/quotes, https://medium.com/@emre.deniz/react-native-making-api-calls-1d5ce5172245
   useEffect(() => {
-    fetch('https://api.api-ninjas.com/v1/quotes', {
+    fetch('https://api.api-ninjas.com/v2/quotes?categories=inspirational', {
       headers: { 'X-Api-Key': process.env.EXPO_PUBLIC_API_NINJAS_KEY ?? '' }
     })
       .then((res) => res.json())
