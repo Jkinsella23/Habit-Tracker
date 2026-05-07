@@ -1,5 +1,8 @@
 Habit Tracker - IS4447
 
+GitHub
+https://github.com/Jkinsella23/Habit-Tracker
+
 QR Codes
 
 ### Android
@@ -17,26 +20,9 @@ Student
 Overview
 A mobile habit tracking app built with React Native (Expo) and SQLite  Drizzle ORM. Users can create habits, log daily activity, set weekly targets, and view progress through charts and streak tracking.
 
-Features
-- Register, login, logout, delete profile
-- Create, edit, delete habits with categories
-- Log daily habit activity with optional notes
-- View stats with bar chart and goal progress
-- Filter by category, search by text, filter by date range
-- Streak tracking with fire and hourglass indicators
-- Quotes from API Ninjas
-- Manage categories with custom colours
-- Weekly target setting
-- Field validation with error messages
-- Empty states with guidance
-
-
-
 Setup
 1. cd Habit-Tracker
 2. npm install
-3. Create a .env file with:
-   EXPO_PUBLIC_API_NINJAS_KEY=your_key_here
 4. npx expo start
 
 Testing
@@ -74,5 +60,3 @@ tests/
   integration.test.tsx
 
 
-GitHub
-https://github.com/Jkinsella23/Habit-Tracker
